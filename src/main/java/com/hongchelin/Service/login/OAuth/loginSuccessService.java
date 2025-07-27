@@ -18,7 +18,10 @@
 
 package com.hongchelin.Service.login.OAuth;
 
+import com.hongchelin.Domain.Member;
+import com.hongchelin.Repository.MemberRepository;
 import com.hongchelin.Service.JWT.JWTFilter;
+import com.hongchelin.dto.user.MemberDTO;
 import com.hongchelin.dto.user.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,9 +34,12 @@ import java.util.*;
 
 @Service
 public class loginSuccessService {
-    @Autowired
     private JWTFilter jwtFilter;
-    public loginSuccessService(JWTFilter jwtFilter) {
+    private MemberRepository memberRepository;
+
+    @Autowired
+    public loginSuccessService(JWTFilter jwtFilter, MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
         this.jwtFilter = jwtFilter;
     }
 
@@ -42,37 +48,47 @@ public class loginSuccessService {
         String registrationId = request.getAuthorizedClientRegistrationId();
         // DB와 대조하는 프로그램 작성 필요
 
-        String email;
+        String id;
         String userToken;
         String refreshToken;
-        String roles = "outer";
         ResponseDTO responseDTO;
 
         if (registrationId.equals("google")) {
-            email = oauth2user.getAttribute("email");
-            userToken = jwtFilter.createToken(secret, email, roles);
-            refreshToken = jwtFilter.createRefreshToken(secret, email, roles);
+            id = oauth2user.getAttribute("email");
+            userToken = jwtFilter.createToken(secret, id);
+            refreshToken = jwtFilter.createRefreshToken(secret, id);
         } else if (registrationId.equals("naver")) {
             Map<String, Object> userInfo = oauth2user.getAttributes();
             Map<String, Object> claims = (Map<String, Object>) userInfo.get("response");
-            String id = claims.get("id").toString();
+            id = claims.get("id").toString();
 
-            userToken = jwtFilter.createToken(secret, id, roles);
-            refreshToken = jwtFilter.createRefreshToken(secret, id, roles);
+            userToken = jwtFilter.createToken(secret, id);
+            refreshToken = jwtFilter.createRefreshToken(secret, id);
         } else {
-            String id = oauth2user.getAttribute("id").toString();
-            userToken = jwtFilter.createToken(secret, id, roles);
-            refreshToken = jwtFilter.createRefreshToken(secret, id, roles);
+            id = oauth2user.getAttribute("id").toString();
+            userToken = jwtFilter.createToken(secret, id);
+            refreshToken = jwtFilter.createRefreshToken(secret, id);
         }
+
+        MemberDTO memberDTO = MemberDTO.builder()
+                .identifier(id)
+                .accessToken(userToken)
+                .refreshToken(refreshToken)
+                .build();
 
         if (ismember) {
             responseDTO = ResponseDTO.builder()
                     .status(200)
                     .message("로그인 성공. 외부인 계정으로 로그인")
                     .redirectUrl("/")
-                    .accessToken(userToken)
-                    .refreshToken(refreshToken)
+                    .MemberInfo(memberDTO)
                     .build();
+
+            Member member = Member.builder()
+                    .nickname("이름이름")
+                    .build();
+
+            memberRepository.save(member);
         }
         else {
             responseDTO = ResponseDTO.builder()

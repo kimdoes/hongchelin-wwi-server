@@ -13,5 +13,6 @@ import lombok.Getter;
 @Getter
 public class MemberDTO {
     private String identifier;
-    private String userRole;
+    private String accessToken;
+    private String refreshToken;
 }

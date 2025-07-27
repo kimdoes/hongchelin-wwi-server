@@ -24,15 +24,13 @@ import java.util.Date;
 
 @Component
 public class JWTProvider {
-    private final long validTokenTime = 1000L * 60 * 60;
-    private final long refreshTokenTime = 1000L * 60 * 60 * 24 * 7;
-
-    public String createToken(String secret, String identifier, String roles) {
+    public String createToken(String secret, String identifier) {
+        Long validTokenTime = 1000L * 60 * 60;
         SecretKey key = Keys.hmacShaKeyFor(Base64.getDecoder().decode(secret));
         Claims claims = Jwts.claims();
         claims.put("identifier", identifier);
-        claims.put("role", roles);
         Date now = new Date();
+
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
@@ -41,11 +39,11 @@ public class JWTProvider {
                 .compact();
     }
 
-    public String createRefreshToken(String secret, String identifier, String roles) {
+    public String createRefreshToken(String secret, String identifier) {
+        Long refreshTokenTime = 1000L * 60 * 60 * 24 * 7;
         SecretKey key = Keys.hmacShaKeyFor(Base64.getDecoder().decode(secret));
         Claims claims = Jwts.claims();
         claims.put("identifier", identifier);
-        claims.put("role", roles);
         Date now = new Date();
         return Jwts.builder()
                 .setClaims(claims)

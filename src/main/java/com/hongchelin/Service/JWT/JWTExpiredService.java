@@ -11,36 +11,49 @@
  */
 package com.hongchelin.Service.JWT;
 
+import com.hongchelin.Domain.Token;
+import com.hongchelin.Repository.TokenRepository;
 import com.hongchelin.dto.user.MemberDTO;
 import com.hongchelin.dto.user.ResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class JWTExpiredService {
     private final JWTFilter jwtFilter;
+    private final TokenRepository tokenRepository;
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public JWTExpiredService(JWTFilter jwtFilter) {
+    public JWTExpiredService(JWTFilter jwtFilter, TokenRepository tokenRepository, JdbcTemplate jdbcTemplate) {
+        this.tokenRepository = tokenRepository;
         this.jwtFilter = jwtFilter;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public ResponseEntity<ResponseDTO> getJWTRefresh(HttpServletRequest request, String secret) {
-        //String refreshToken = request.getHeader("Refresh-Token");
-        String refreshToken = "eyJhbGciOiJIUzI1NiJ9.eyJpZGVudGlmaWVyIjoiZGhtb29uMjAwNkBnbWFpbC5jb20iLCJyb2xlIjoib3V0ZXIiLCJpYXQiOjE3NTI3MjU1OTcsImV4cCI6MTc1MzMzMDM5N30.v87z26iD2f4aktxue0CE8z089Fxzf7S4SEJC-wT2rls";
+        String refreshToken = request.getHeader("Refresh-Token");
         ResponseDTO refreshTokenValidityResult = jwtFilter.checkValidityAndReturnUserRoles(secret, refreshToken);
         boolean refreshTokenValidity = refreshTokenValidityResult.getValidity();
         System.out.println(refreshTokenValidityResult);
 
         if (refreshTokenValidity) { //토큰 유효 / 새 AccessToken 발급
+            String userId = jdbcTemplate.queryForObject("SELECT user_Id FROM TOKEN WHERE refresh_token = ? ", String.class, refreshToken);
+
             ResponseDTO userDataResult = jwtFilter.getUserRoles(secret, refreshToken);
             MemberDTO userData = userDataResult.getMemberInfo();
             String identifier = userData.getIdentifier();
-            String userRole = userData.getUserRole();
-            String newAcessToken = jwtFilter.createToken(secret, identifier, userRole);
+            String newAcessToken = jwtFilter.createToken(secret, identifier);
+
+            Token token = Token.builder()
+                    .userId(userId)
+                    .refreshToken(newAcessToken).build();
+
+            tokenRepository.update(token);
 
             ResponseDTO responseDTO = ResponseDTO.builder()
                     .status(200)

@@ -30,12 +30,12 @@ public class JWTFilter {
         this.jwtProvider = jwtProvider;
     }
 
-    public String createToken(String secret, String identifier, String roles) {
-        return jwtProvider.createToken(secret, identifier, roles);
+    public String createToken(String secret, String identifier) {
+        return jwtProvider.createToken(secret, identifier);
     }
 
-    public String createRefreshToken(String secret, String identifier, String roles) {
-        return jwtProvider.createRefreshToken(secret, identifier, roles);
+    public String createRefreshToken(String secret, String identifier) {
+        return jwtProvider.createRefreshToken(secret, identifier);
     }
 
     public ResponseDTO getTokenFromHeader(String secret, HttpServletRequest request) {
@@ -55,12 +55,8 @@ public class JWTFilter {
         String validityMessage = jwtProvider.validateToken(secret, token);
 
         if (validityMessage.equals("성공")) {
-            ResponseDTO userRoles = getUserRoles(secret, token);
-            MemberDTO memberInfo = userRoles.getMemberInfo();
-
             return ResponseDTO.builder()
                     .status(200)
-                    .MemberInfo(memberInfo)
                     .validity(true)
                     .build();
 
@@ -76,11 +72,9 @@ public class JWTFilter {
 
     public ResponseDTO getUserRoles(String secret, String token) {
         Claims claims = jwtProvider.getSubject(secret, token);
-        String userRole = (String) claims.get("roles");
         String identifier = (String) claims.get("identifier");
 
         MemberDTO member = MemberDTO.builder()
-                .userRole(userRole)
                 .identifier(identifier)
                 .build();
 

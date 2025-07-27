@@ -40,10 +40,9 @@ public class hongikUnivloginSuccessService {
 
     public ResponseEntity<ResponseDTO> hongikUnivlogin(String secret) {
         String identifier = "hi"; //이메일주소. 어딘가에 저장해두고 가져와야함
-        String roles = "inner";
 
-        String userToken = jwtFilter.createToken(secret, identifier, roles);
-        String refreshToken = jwtFilter.createToken(secret, identifier, roles);
+        String userToken = jwtFilter.createToken(secret, identifier);
+        String refreshToken = jwtFilter.createToken(secret, identifier);
 
         ResponseDTO responseDTO = ResponseDTO.builder()
                 .status(200)

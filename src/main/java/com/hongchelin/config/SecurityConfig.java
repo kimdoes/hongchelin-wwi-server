@@ -19,6 +19,7 @@ public class SecurityConfig{
                         .requestMatchers("/**").permitAll()
                         .anyRequest().authenticated()
                 )
+                .headers(headers -> headers.frameOptions(frameOptionsConfig -> frameOptionsConfig.disable()))
                 .formLogin(AbstractHttpConfigurer::disable)
                 .oauth2Login(oauth2 -> oauth2
                         .defaultSuccessUrl("/api/login/success", true)
