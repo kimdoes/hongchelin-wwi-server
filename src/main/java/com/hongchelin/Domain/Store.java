@@ -15,13 +15,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class Member {
+public class Store {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nickname;
-    private String userId;
-    private String password;
-    private String email;
+    private String storeName;
+    private String storeLocationInMapX;
+    private String storeLocationInMapY;
+    private String storeImg;
+    private String storeLocation;
 }

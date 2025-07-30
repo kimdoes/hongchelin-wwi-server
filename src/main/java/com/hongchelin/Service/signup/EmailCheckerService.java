@@ -22,7 +22,7 @@ public class EmailCheckerService {
         } else {
             ResponseDTO responseDTO = ResponseDTO.builder()
                     .status(401)
-                    .message("비밀번호가 일치하지 않습니다.")
+                    .message("인증번호가 일치하지 않습니다.")
                     .build();
 
             return ResponseEntity

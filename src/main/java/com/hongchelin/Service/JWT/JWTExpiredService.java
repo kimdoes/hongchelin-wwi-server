@@ -44,7 +44,7 @@ public class JWTExpiredService {
         if (refreshTokenValidity) { //토큰 유효 / 새 AccessToken 발급
             String userId = jdbcTemplate.queryForObject("SELECT user_Id FROM TOKEN WHERE refresh_token = ? ", String.class, refreshToken);
 
-            ResponseDTO userDataResult = jwtFilter.getUserRoles(secret, refreshToken);
+            ResponseDTO userDataResult = jwtFilter.getUserInfo(secret, refreshToken);
             MemberDTO userData = userDataResult.getMemberInfo();
             String identifier = userData.getIdentifier();
             String newAcessToken = jwtFilter.createToken(secret, identifier);

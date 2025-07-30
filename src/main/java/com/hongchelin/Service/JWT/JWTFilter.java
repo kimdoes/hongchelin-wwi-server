@@ -70,7 +70,7 @@ public class JWTFilter {
         }
     }
 
-    public ResponseDTO getUserRoles(String secret, String token) {
+    public ResponseDTO getUserInfo(String secret, String token) {
         Claims claims = jwtProvider.getSubject(secret, token);
         String identifier = (String) claims.get("identifier");
 

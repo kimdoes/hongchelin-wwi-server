@@ -31,30 +31,40 @@ public class LoginMainService {
         Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM member WHERE user_Id = ?", Integer.class, userId);
 
         if (count == 1) { //정보 있음. 로그인
-            String ideintifier = jdbcTemplate.queryForObject("SELECT user_Id FROM MEMBER WHERE user_Id = ?", String.class, userId);
+            String ideintifier = userId;
+            String passWord = jdbcTemplate.queryForObject("SELECT password FROM MEMBER WHERE user_Id = ?", String.class, userId);
+            String enteredPassword = memberRequestDTO.getPassword();
 
-            ResponseDTO responseDTO = ResponseDTO.builder()
-                    .status(200)
-                    .message("성공")
-                    .accessToken(jwtFilter.createToken(secret, ideintifier))
-                    .refreshToken(jwtFilter.createRefreshToken(secret, ideintifier))
-                    .build();
+            if (passWord.equals(enteredPassword)) {
+                ResponseDTO responseDTO = ResponseDTO.builder()
+                        .status(200)
+                        .message("성공")
+                        .accessToken(jwtFilter.createToken(secret, ideintifier))
+                        .refreshToken(jwtFilter.createRefreshToken(secret, ideintifier))
+                        .build();
 
-            Integer countToken = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM TOKEN WHERE user_id = ?", Integer.class, userId);
+                Integer countToken = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM TOKEN WHERE user_id = ?", Integer.class, userId);
 
-            Token token = Token.builder()
-                    .userId(userId)
-                    .refreshToken(jwtFilter.createRefreshToken(secret, ideintifier))
-                    .build();
+                Token token = Token.builder()
+                        .userId(userId)
+                        .refreshToken(jwtFilter.createRefreshToken(secret, ideintifier))
+                        .build();
 
-            if (countToken == 1) {
-                tokenRepository.update(token);
-            } else {
-                tokenRepository.save(token);
+                if (countToken == 1) {
+                    tokenRepository.update(token);
+                } else {
+                    tokenRepository.save(token);
+                }
+
+                return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
+            } else { //메시지 오류
+                ResponseDTO responseDTO = ResponseDTO.builder()
+                        .status(400)
+                        .message("비밀번호가 일치하지 않습니다")
+                        .build();
+
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseDTO);
             }
-
-            return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
-
         } else { //로그인 정보 없음
             ResponseDTO responseDTO = ResponseDTO.builder()
                     .status(400)
