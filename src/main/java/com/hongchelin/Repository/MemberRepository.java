@@ -19,8 +19,50 @@ public class MemberRepository implements MemberRepositoryInterface {
 
     @Override
     public Iterable<Member> findAll() {
-        return jdbcTemplate.query("select id, name, role, refresh_token from Member",
+        return jdbcTemplate.query("select id, nickname, role, refresh_token from Member",
                 this::mapRowToMember);
+    }
+
+    public boolean checkingName(Member member) {
+        String sql = """
+        SELECT COUNT(*) FROM MEMBER WHERE nickName = ?
+        """;
+
+        Integer count = jdbcTemplate.queryForObject
+                (sql,
+                        Integer.class,
+                        member.getNickname()
+                );
+
+        return count != null && count == 0;
+    }
+
+    public boolean checkingId(String userId) {
+        String sql = """
+        SELECT COUNT(*) FROM MEMBER WHERE user_Id = ?
+        """;
+
+        Integer count = jdbcTemplate.queryForObject
+                (sql,
+                        Integer.class,
+                        userId
+                );
+
+        return count != null && count == 0;
+    }
+
+    public boolean checkingEmail(Member member) {
+        String sql = """
+        SELECT COUNT(*) FROM MEMBER WHERE email = ?
+        """;
+
+        Integer count = jdbcTemplate.queryForObject
+                (sql,
+                        Integer.class,
+                        member.getEmail()
+                );
+
+        return count != null && count == 0;
     }
 
     @Override

@@ -17,15 +17,13 @@ public class StoreRegisterService {
 
     public ResponseEntity<ResponseDTO> storeRegiester(StoreRegisterRequstDTO storeRegisterRequstDTO) {
         String storeName = storeRegisterRequstDTO.getStoreName();
-        String storeLocationInMapX = storeRegisterRequstDTO.getStoreLocationInMapX();
-        String storeLocationInMapY = storeRegisterRequstDTO.getStoreLocationInMapY();
+        String storeInfoOneline = storeRegisterRequstDTO.getStoreInfoOneline();
         String storeImg = storeRegisterRequstDTO.getStoreImg();
         String storeLocation = storeRegisterRequstDTO.getStoreLocation();
 
         Store store = Store.builder()
                 .storeName(storeName)
-                .storeLocationInMapX(storeLocationInMapX)
-                .storeLocationInMapY(storeLocationInMapY)
+                .storeInfoOneline(storeInfoOneline)
                 .storeImg(storeImg)
                 .storeLocation(storeLocation)
                 .build();

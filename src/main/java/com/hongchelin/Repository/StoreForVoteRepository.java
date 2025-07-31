@@ -1,6 +1,7 @@
 package com.hongchelin.Repository;
 
 import com.hongchelin.Domain.Store;
+import com.hongchelin.Domain.StoreForVote;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -8,34 +9,34 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Repository
-public class StoreRepository {
+public class StoreForVoteRepository {
     private JdbcTemplate jdbcTemplate;
 
-    public StoreRepository(JdbcTemplate jdbcTemplate) {
+    public StoreForVoteRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Iterable<Store> findAll() {
-        return jdbcTemplate.query("select id, store_Name, store_Img, store_Location, store_Info_Oneline from STORE",
-                this::mapRowToStore);
-        }
-
-    public Store findById(Long id) {
-        return jdbcTemplate.queryForObject(
-                "select id, store_Name, store_Img, store_Location, store_Info_Oneline  from STORE where id=?",
-                this::mapRowToStore, id);
+    public Iterable<StoreForVote> findAll() {
+        return jdbcTemplate.query("select id, store_Name, store_Img, store_Location, store_Info_Oneline from STOREFORVOTE",
+                this::mapRowToVoteStore);
     }
 
-    public boolean checker(Store store) {
+    public StoreForVote findById(Long id) {
+        return jdbcTemplate.queryForObject(
+                "select id, store_Name, store_Img, store_Location, store_Info_Oneline  from STOREFORVOTE where id=?",
+                this::mapRowToVoteStore, id);
+    }
+
+    public boolean checker(String location) {
         String sql = """
         SELECT COUNT(*) FROM STORE WHERE (STORE_LOCATION) = ?
         """;
 
         Integer count = jdbcTemplate.queryForObject
                 (sql,
-                 Integer.class,
-                 //store.getStoreName(),
-                 store.getStoreLocation()
+                        Integer.class,
+                        //store.getStoreName(),
+                        location
                 );
 
         return count != null && count == 0;
@@ -43,24 +44,18 @@ public class StoreRepository {
 
     public Store save(Store store) {
         jdbcTemplate.update(
-                "insert into Store (store_Name, store_Img, store_Location, store_Info_Oneline) values (?, ?, ?, ?)",
+                "insert into STOREFORVOTE (store_Name, store_Img, store_Location, store_Info_Oneline) values (?, ?, ?, ?)",
                 store.getStoreName(),
                 store.getStoreImg(),
                 store.getStoreLocation(),
                 store.getStoreInfoOneline()
-       );
+        );
 
         return store;
     }
 
-    public Store findByStoreName(String storeName) {
-        return jdbcTemplate.queryForObject(
-                "select id, store_Name, store_Img, store_Location, store_Info_Oneline  from STORE where STORE_NAME=?",
-                this::mapRowToStore, storeName);
-    }
-
-    public Store mapRowToStore(ResultSet rs, int rowNum) throws SQLException {
-        return Store.builder()
+    public StoreForVote mapRowToVoteStore(ResultSet rs, int rowNum) throws SQLException {
+        return StoreForVote.builder()
                 .id(rs.getLong("id"))
                 .storeName(rs.getString("name"))
                 .storeInfoOneline(rs.getString("store_info_oneline"))
@@ -69,4 +64,3 @@ public class StoreRepository {
                 .build();
     }
 }
-

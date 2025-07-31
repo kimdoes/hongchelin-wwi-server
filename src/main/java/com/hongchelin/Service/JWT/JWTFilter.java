@@ -47,6 +47,7 @@ public class JWTFilter {
             return ResponseDTO.builder()
                     .status(400)
                     .message("헤더에 AccessToken이 필요합니다.")
+                    .validity(false)
                     .build();
         }
     }

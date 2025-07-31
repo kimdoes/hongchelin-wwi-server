@@ -1,28 +1,40 @@
 package com.hongchelin.Service.signup;
 
+import com.hongchelin.Repository.PasswordRepository;
 import com.hongchelin.dto.user.ResponseDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
 public class EmailCheckerService {
+    private PasswordRepository passwordRepository;
+    @Autowired
+    public EmailCheckerService(PasswordRepository passwordRepository) {
+        this.passwordRepository = passwordRepository;
+    }
 
-    public ResponseEntity<ResponseDTO> EmailCheckerService(String userPwd) {
-        //Redis 에서 저장된 pwd 가져오기
-        String pwd = "thehiveclusterisunderattack";
+    @Async
+    public ResponseEntity<ResponseDTO> EmailCheckerService(Integer userPwd) {
+        boolean pwd = passwordRepository.checkingNumber(userPwd);
 
-        if (userPwd.equals(pwd)) {
+        if (pwd) {
             ResponseDTO responseDTO = ResponseDTO.builder()
                     .status(200)
                     .message("성공")
+                    .validity(true)
                     .build();
+
+            passwordRepository.delete(userPwd);
 
             return ResponseEntity.ok(responseDTO);
         } else {
             ResponseDTO responseDTO = ResponseDTO.builder()
                     .status(401)
                     .message("인증번호가 일치하지 않습니다.")
+                    .validity(false)
                     .build();
 
             return ResponseEntity

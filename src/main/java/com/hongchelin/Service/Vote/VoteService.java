@@ -16,16 +16,14 @@ public class VoteService {
         this.jwtFilter = jwtFilter;
     }
 
-    public ResponseEntity<ResponseDTO> VoteService(String secret/*, HttpServletRequest request, voteRequstDTO voteRequestDTO*/) {
-        //MemberDTO memberDTO = jwtFilter.getTokenFromHeader(secret, request).getMemberInfo();
+    public ResponseEntity<ResponseDTO> VoteService(String secret, HttpServletRequest request, voteRequstDTO voteRequestDTO) {
+        MemberDTO memberDTO = jwtFilter.getTokenFromHeader(secret, request).getMemberInfo();
 
-        //if (memberDTO != null) {
-            //String role = memberDTO.getUserRole();
-            String role = "outerGod";
+        if (memberDTO != null) {
+            boolean isInToken = jwtFilter.getTokenFromHeader(secret, request).getValidity();
 
-            if (role.equals("inner")) {
-                //String identifier = memberDTO.getIdentifier();
-                String identifier = "33133";
+            if (isInToken) {
+                String identifier = memberDTO.getIdentifier();
 
                 // DB의 Store에 선택한 유저의 정보를 저장해야함
 
@@ -56,14 +54,14 @@ public class VoteService {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseDTO);
                 }
             }
-        /*} else {
+        } else {
             ResponseDTO responseDTO = ResponseDTO.builder()
                     .status(400)
                     .message("사용자 정보가 제대로 전달되지 못했습니다.")
                     .build();
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseDTO);
-        } */
+        }
 
         ResponseDTO responseDTO = ResponseDTO.builder()
                 .message("권한이 없습니다.")

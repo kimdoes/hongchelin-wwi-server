@@ -1,3 +1,4 @@
+/*
 package com.hongchelin.controller.vote;
 
 import com.hongchelin.Service.Vote.AccessVoteByMonthService;
@@ -34,3 +35,5 @@ public class AccessVoteByMonthController {
         }
     }
 }
+
+*/

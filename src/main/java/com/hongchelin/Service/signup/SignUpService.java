@@ -4,6 +4,7 @@ import com.hongchelin.Domain.Member;
 import com.hongchelin.Repository.MemberRepository;
 import com.hongchelin.dto.Request.MemberRequestDTO;
 import com.hongchelin.dto.user.ResponseDTO;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,12 +17,19 @@ public class SignUpService {
     }
 
     public ResponseEntity<ResponseDTO> signUp(MemberRequestDTO memberRequestDTO) throws Exception {
-        try {
-            String nickname = memberRequestDTO.getNickname();
-            String userId = memberRequestDTO.getUserId();
-            String password = memberRequestDTO.getPassword();
-            String email = memberRequestDTO.getEmail();
+        String nickname = memberRequestDTO.getNickname();
+        String userId = memberRequestDTO.getUserId();
+        String password = memberRequestDTO.getPassword();
+        String email = memberRequestDTO.getEmail();
 
+        if (nickname == null || email == null) {
+            ResponseDTO responseDTO = ResponseDTO.builder()
+                    .status(400)
+                    .message("닉네임 또는 이메일이 공백입니다.")
+                    .build();
+
+            return new ResponseEntity<>(responseDTO, HttpStatus.BAD_REQUEST);
+        } else {
             Member member = Member.builder()
                     .nickname(nickname)
                     .userId(userId)
@@ -36,14 +44,6 @@ public class SignUpService {
                     .build();
 
             return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
-        } catch(Exception e) {
-            e.printStackTrace();
-            ResponseDTO responseDTO = ResponseDTO.builder()
-                    .status(500)
-                    .message("에러")
-                    .build();
-
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
         }
     }
 }

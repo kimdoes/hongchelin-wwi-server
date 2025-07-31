@@ -7,8 +7,7 @@ import lombok.Data;
 @Data
 public class StoreRegisterRequstDTO {
     private String storeName;
-    private String storeLocationInMapX;
-    private String storeLocationInMapY;
+    private String storeInfoOneline;
     private String storeImg;
     private String storeLocation;
 }
