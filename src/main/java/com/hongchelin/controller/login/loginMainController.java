@@ -1,6 +1,6 @@
 package com.hongchelin.controller.login;
 
-import com.hongchelin.Service.login.LoginMainService;
+import com.hongchelin.service.login.LoginMainService;
 import com.hongchelin.dto.Request.MemberRequestDTO;
 import com.hongchelin.dto.user.ResponseDTO;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/login")
+@RequestMapping("/api/login")
 public class loginMainController {
     private final LoginMainService loginMainService;
     public loginMainController(LoginMainService loginMainService) {

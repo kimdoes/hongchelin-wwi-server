@@ -1,6 +1,7 @@
 package com.hongchelin.controller;
 
 import com.hongchelin.dto.user.ResponseDTO;
+import com.hongchelin.exceptions.UnauthorizedException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -96,6 +97,30 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ResponseDTO> emptyResultDataAccessException(
             EmptyResultDataAccessException ex
     ){
+        ResponseDTO responseDTO = ResponseDTO.builder()
+                .status(500)
+                .message(ex.getLocalizedMessage())
+                .build();
+
+        return new ResponseEntity<>(responseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ResponseDTO> unauthorizedException(
+            UnauthorizedException ex
+    ){
+        ResponseDTO responseDTO = ResponseDTO.builder()
+                .status(401)
+                .message("권한이 없습니다.")
+                .build();
+
+        return new ResponseEntity<>(responseDTO, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ResponseDTO> illegalArgumentException(
+            IllegalArgumentException ex
+    ) {
         ResponseDTO responseDTO = ResponseDTO.builder()
                 .status(500)
                 .message(ex.getLocalizedMessage())

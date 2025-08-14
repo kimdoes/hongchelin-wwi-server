@@ -1,12 +1,11 @@
 package com.hongchelin.controller.signup;
 
-import com.hongchelin.Service.signup.*;
+import com.hongchelin.service.signup.*;
 import com.hongchelin.dto.Request.MemberRequestDTO;
 import com.hongchelin.dto.user.ResponseDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller

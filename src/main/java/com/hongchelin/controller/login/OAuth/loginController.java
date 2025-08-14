@@ -7,23 +7,48 @@
  */
 package com.hongchelin.controller.login.OAuth;
 
-import com.hongchelin.Service.login.OAuth.loginService;
+import com.hongchelin.dto.user.ResponseDTO;
+import com.hongchelin.dto.whatForSignupDTO;
+import com.hongchelin.service.login.OAuth.loginService;
+import com.hongchelin.service.login.OAuth.loginSuccessService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/login")
 public class loginController {
     private final loginService loginService;
+    private final loginSuccessService loginSuccessService;
+
 
     @Autowired
-    public loginController(loginService loginService) {
+    public loginController(loginService loginService,
+                           loginSuccessService loginSuccessService) {
         this.loginService = loginService;
+        this.loginSuccessService = loginSuccessService;
     }
 
     @GetMapping("/{authprovider}")
     public ResponseEntity<?> login(@PathVariable int authprovider) {
         return loginService.loginMethodSorting(authprovider);
+    }
+
+    @GetMapping("/success")
+    public ResponseEntity<ResponseDTO> lsController(
+            @Value("${spring.jwt.secret}") String secret,
+            @AuthenticationPrincipal OAuth2User oauth2user,
+            OAuth2AuthenticationToken OAuth2request,
+            HttpServletRequest request) {
+
+        System.out.println(secret);
+        String email = oauth2user.getAttribute("email");
+        System.out.println(email);
+        return loginSuccessService.checkUserInformation(secret, oauth2user, request, OAuth2request);
     }
 }

@@ -19,11 +19,16 @@ public class StoreForVote {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String storeName;
+    private long storeId;
 
-    private String storeImg;
+    //private String storeName;
 
-    private String storeLocation;
+    //private String storeImg;
 
-    private String storeInfoOneline;
+    //private String storeLocation;
+
+    //private String storeInfoOneline;
+
+    @Builder.Default
+    private Integer votedCount = 0;
 }

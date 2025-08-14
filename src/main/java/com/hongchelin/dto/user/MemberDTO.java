@@ -12,7 +12,7 @@ import lombok.Getter;
 @Builder
 @Getter
 public class MemberDTO {
-    private String identifier;
+    private String identifier; //userId
     private String accessToken;
     private String refreshToken;
 }

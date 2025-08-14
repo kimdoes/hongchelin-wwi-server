@@ -8,7 +8,7 @@
  */
 package com.hongchelin.controller.login.HongikUniv;
 
-import com.hongchelin.Service.login.HongikUniv.hongikUnivloginService;
+import com.hongchelin.service.login.HongikUniv.hongikUnivloginService;
 import com.hongchelin.dto.user.ResponseDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

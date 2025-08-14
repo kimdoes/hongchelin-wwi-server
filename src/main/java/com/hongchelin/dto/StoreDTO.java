@@ -20,6 +20,7 @@ import java.util.ArrayList;
 @Builder
 @Getter
 public class StoreDTO {
+
     String identifier;
     ArrayList<String> location;
     String storeName;

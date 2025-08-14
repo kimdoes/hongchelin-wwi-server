@@ -1,8 +1,11 @@
 package com.hongchelin.controller.Store;
 
-import com.hongchelin.Service.Store.StoreRegisterService;
+import com.hongchelin.service.Store.StoreRegisterService;
 import com.hongchelin.dto.Request.StoreRegisterRequstDTO;
 import com.hongchelin.dto.user.ResponseDTO;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +21,11 @@ public class StoreRegisterController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseDTO> StoreRegister(@RequestBody StoreRegisterRequstDTO storeRegisterRequstDTO){
-        return storeRegisterService.storeRegiester(storeRegisterRequstDTO);
+    public ResponseEntity<ResponseDTO> StoreRegister(
+            @RequestBody @Valid StoreRegisterRequstDTO storeRegisterRequstDTO,
+            HttpServletRequest request,
+            @Value("${spring.jwt.secret}") String secret
+    ){
+        return storeRegisterService.storeRegiester(storeRegisterRequstDTO, request, secret);
     }
 }

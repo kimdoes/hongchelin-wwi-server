@@ -1,5 +1,7 @@
+
 package com.hongchelin.config;
 
+import com.hongchelin.dto.whatForSignupDTO;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -8,12 +10,17 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
+import javax.sql.DataSource;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig{
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        whatForSignupDTO whatForSignupDTO = new whatForSignupDTO();
+        ThreadLocal<Boolean> isForLogin = whatForSignupDTO.isForLogin();
+
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
@@ -22,14 +29,25 @@ public class SecurityConfig{
                 )
                 .cors(Customizer.withDefaults())
                 .headers(headers -> headers.frameOptions(frameOptionsConfig -> frameOptionsConfig.disable()))
-                .formLogin(AbstractHttpConfigurer::disable)
-                .oauth2Login(oauth2 -> oauth2
-                        .defaultSuccessUrl("/api/login/success", true)
+                .formLogin(oauth2 -> oauth2
+                        .loginPage("/api/login")
+                        .defaultSuccessUrl("/api/login/success", true))
 
+                .oauth2Login(oauth2 -> oauth2
+                        .successHandler((request, response, authentication) -> {
+
+                            Boolean isforlogin = whatForSignupDTO.isForLogin().get();
+
+                            if (isforlogin != null && isforlogin) {
+                                response.sendRedirect("/api/login/success");
+                            } else {
+                                response.sendRedirect("/regisInDB");
+                            }
+                        })
                 )
+
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/")
-                );
+                        .logoutSuccessUrl("/"));
 
         return http.build();
     }
