@@ -1,38 +1,28 @@
 package com.hongchelin.mypage.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
 
-@Entity
+@Entity @Table(name="users")
+@Getter @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class User {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Long id;
+    @Column(nullable=false, length=30) private String nickname;
+    private String profileImagePath;
+    private Long activeBadgeId;
+    private LocalDateTime createdAt; private LocalDateTime updatedAt;
 
-    private String nickname;
-    private String profileImageUrl;
-
-    protected User() {}
-
-    public User(String nickname, String profileImageUrl) {
-        this.nickname = nickname;
-        this.profileImageUrl = profileImageUrl;
+    public static User createWithId(Long id, String nickname){
+        User u = new User();
+        u.id = id; u.nickname = nickname; return u;
     }
+    public void changeNickname(String nickname){ this.nickname = nickname; touch(); }
+    public void changeProfileImage(String url){ this.profileImagePath = url; touch(); }
+    public void setActiveBadge(Long badgeId){ this.activeBadgeId = badgeId; touch(); }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-    public String getProfileImageUrl() {
-        return profileImageUrl;
-    }
-
-    public void updateNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public void updateProfileImageUrl(String profileImageUrl) {
-        this.profileImageUrl = profileImageUrl;
-    }
+    @PrePersist void onCreate(){ createdAt = updatedAt = LocalDateTime.now(); }
+    @PreUpdate  void onUpdate(){ updatedAt = LocalDateTime.now(); }
+    private void touch(){ this.updatedAt = LocalDateTime.now(); }
 }
