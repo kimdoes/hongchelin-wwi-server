@@ -16,7 +16,6 @@ public class UserBadge {
     private LocalDateTime obtainedAt;
 
     public static UserBadge obtain(User user, Badge badge){
-        UserBadge ub = new UserBadge();
-        ub.user=user; ub.badge=badge; ub.obtainedAt=LocalDateTime.now(); return ub;
+        UserBadge ub = new UserBadge(); ub.user=user; ub.badge=badge; ub.obtainedAt=LocalDateTime.now(); return ub;
     }
 }

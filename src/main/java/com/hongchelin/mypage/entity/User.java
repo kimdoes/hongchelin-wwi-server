@@ -3,6 +3,7 @@ package com.hongchelin.mypage.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
 @Entity @Table(name="users")
@@ -15,8 +16,7 @@ public class User {
     private LocalDateTime createdAt; private LocalDateTime updatedAt;
 
     public static User createWithId(Long id, String nickname){
-        User u = new User();
-        u.id = id; u.nickname = nickname; return u;
+        User u = new User(); u.id = id; u.nickname = nickname; return u;
     }
     public void changeNickname(String nickname){ this.nickname = nickname; touch(); }
     public void changeProfileImage(String url){ this.profileImagePath = url; touch(); }
@@ -24,5 +24,6 @@ public class User {
 
     @PrePersist void onCreate(){ createdAt = updatedAt = LocalDateTime.now(); }
     @PreUpdate  void onUpdate(){ updatedAt = LocalDateTime.now(); }
-    private void touch(){ this.updatedAt = LocalDateTime.now(); }
+    private void touch(){ updatedAt = LocalDateTime.now(); }
 }
+

@@ -14,3 +14,4 @@ public class PostService {
         return posts.findByAuthor(users.getOrCreate(userId), PageRequest.of(page, size));
     }
 }
+

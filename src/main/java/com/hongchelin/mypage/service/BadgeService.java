@@ -2,10 +2,8 @@
 package com.hongchelin.mypage.service;
 
 import com.hongchelin.mypage.entity.*;
-import com.hongchelin.mypage.dto.BadgeDtos.ShareInfo;
-import com.hongchelin.mypage.exception.ApiException;
+import com.hongchelin.mypage.dto.BadgeDtos.BadgeResp;
 import com.hongchelin.mypage.repository.*;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,19 +18,18 @@ public class BadgeService {
     public List<Badge> allBadges(){ return badges.findAll(); }
     public List<UserBadge> myBadges(Long userId){ return userBadges.findByUser(users.getOrCreate(userId)); }
 
+    /** (선택) 필요시 다른 배지를 지급하려면 사용 */
     public void obtain(Long userId, Long badgeId){
         if (userBadges.existsByUserIdAndBadgeId(userId, badgeId)) return;
-        Badge b = badges.findById(badgeId).orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "배지 없음"));
+        Badge b = badges.findById(badgeId).orElseThrow();
         userBadges.save(UserBadge.obtain(users.getOrCreate(userId), b));
     }
 
-    public ShareInfo share(Long userId, Long badgeId){
-        if (!userBadges.existsByUserIdAndBadgeId(userId, badgeId))
-            throw new ApiException(HttpStatus.FORBIDDEN, "보유하지 않은 배지");
+    public BadgeResp activeBadgeInfo(Long userId){
         User u = users.getOrCreate(userId);
-        Badge b = badges.findById(badgeId).orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "배지 없음"));
-        String token = userId + "-" + badgeId;
-        return new ShareInfo(u.getNickname(), b.getName(), b.getIconPath(), "/api/share/badge/" + token);
+        if (u.getActiveBadgeId()==null) return null;
+        return badges.findById(u.getActiveBadgeId()).map(BadgeResp::of).orElse(null);
     }
 }
+
 

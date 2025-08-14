@@ -11,7 +11,6 @@ import java.nio.file.*; import java.util.UUID;
 public class FileStorageService {
     @Value("${app.upload-dir}") private String uploadDir;
 
-    /** /uploads/{subDir}/{uuid.ext} 저장 → /files/... URL 반환 */
     public String save(MultipartFile file, String subDir){
         try{
             String ext = getExt(file.getOriginalFilename());
@@ -23,4 +22,5 @@ public class FileStorageService {
     }
     private String getExt(String fn){ if (fn==null) return ""; int i=fn.lastIndexOf('.'); return (i<0)?"":fn.substring(i+1); }
 }
+
 

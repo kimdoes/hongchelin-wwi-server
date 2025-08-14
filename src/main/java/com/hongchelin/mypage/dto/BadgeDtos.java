@@ -10,5 +10,5 @@ public class BadgeDtos {
     public record MyBadgeResp(Long id, BadgeResp badge, LocalDateTime obtainedAt){
         public static MyBadgeResp of(UserBadge ub){ return new MyBadgeResp(ub.getId(), BadgeResp.of(ub.getBadge()), ub.getObtainedAt()); }
     }
-    public record ShareInfo(String nickname, String badgeName, String badgeIconUrl, String shareUrl) {}
 }
+
