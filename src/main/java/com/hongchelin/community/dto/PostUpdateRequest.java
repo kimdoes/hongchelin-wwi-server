@@ -1,10 +1,13 @@
 package com.hongchelin.community.dto;
 
 import lombok.Getter;
-import lombok.Setter;
 
-@Getter @Setter
+@Getter
 public class PostUpdateRequest {
     private String title;
+    private String location;
+    private String recommendedMenu;
     private String content;
+    private String imagePath;
+    private int rating;
 }

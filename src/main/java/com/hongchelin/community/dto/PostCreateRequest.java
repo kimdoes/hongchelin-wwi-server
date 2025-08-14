@@ -1,11 +1,15 @@
 package com.hongchelin.community.dto;
 
 import lombok.Getter;
-import lombok.Setter;
+import java.time.LocalDate;
 
-@Getter @Setter
+@Getter
 public class PostCreateRequest {
     private String title;
+    private LocalDate date;
+    private String location;
+    private String recommendedMenu;
     private String content;
-    private String writer;
+    private String imagePath;
+    private int rating;
 }

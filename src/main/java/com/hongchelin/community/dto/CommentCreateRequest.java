@@ -1,10 +1,9 @@
 package com.hongchelin.community.dto;
 
 import lombok.Getter;
-import lombok.Setter;
 
-@Getter @Setter
+@Getter
 public class CommentCreateRequest {
+    private String author;
     private String content;
-    private String writer;
 }

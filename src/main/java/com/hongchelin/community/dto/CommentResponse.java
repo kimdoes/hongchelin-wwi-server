@@ -1,13 +1,17 @@
 package com.hongchelin.community.dto;
 
-import lombok.Builder;
+import com.hongchelin.community.entity.Comment;
 import lombok.Getter;
 
 @Getter
-@Builder
 public class CommentResponse {
     private Long id;
+    private String author;
     private String content;
-    private String writer;
-    private Long postId;
+
+    public CommentResponse(Comment comment) {
+        this.id = comment.getId();
+        this.author = comment.getAuthor();
+        this.content = comment.getContent();
+    }
 }

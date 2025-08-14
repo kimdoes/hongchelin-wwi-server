@@ -1,5 +1,8 @@
 package com.hongchelin.community.controller;
 
+import com.hongchelin.community.dto.PostCreateRequest;
+import com.hongchelin.community.dto.PostResponse;
+import com.hongchelin.community.dto.PostUpdateRequest;
 import com.hongchelin.community.entity.Post;
 import com.hongchelin.community.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -8,33 +11,38 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/posts")
 @RequiredArgsConstructor
+@RequestMapping("/posts")
 public class PostController {
 
     private final PostService postService;
 
-    // 게시글 목록 조회
+    @PostMapping
+    public Long createPost(@RequestBody PostCreateRequest request) {
+        return postService.createPost(request);
+    }
+
     @GetMapping
-    public List<Post> getAllPosts() {
+    public List<PostResponse> getPosts() {
         return postService.getAllPosts();
     }
 
-    // 게시글 작성
-    @PostMapping
-    public Post createPost(@RequestBody Post post) {
-        return postService.createPost(post);
+    @GetMapping("/posts/{postId}")
+    public Post getPost(@PathVariable Long id) {
+        return postService.getPost(id);
     }
 
-    // 게시글 수정
-    @PutMapping("/{postId}")
-    public Post updatePost(@PathVariable Long postId, @RequestBody Post post) {
-        return postService.updatePost(postId, post);
+    @PutMapping("/posts/{postId}")
+    public Long updatePost(@PathVariable Long id,
+                           @RequestBody PostUpdateRequest request) {
+        return postService.updatePost(id, request);
     }
 
-    // 게시글 삭제
-    @DeleteMapping("/{postId}")
-    public void deletePost(@PathVariable Long postId) {
-        postService.deletePost(postId);
+    @DeleteMapping("/posts/{postId}")
+    public void deletePost(@PathVariable Long id) {
+        postService.deletePost(id);
     }
 }
+
+
+
