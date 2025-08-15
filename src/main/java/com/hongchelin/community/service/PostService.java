@@ -1,56 +1,56 @@
 package com.hongchelin.community.service;
 
-import com.hongchelin.community.dto.PostCreateRequest;
-import com.hongchelin.community.dto.PostResponse;
-import com.hongchelin.community.dto.PostUpdateRequest;
+import com.hongchelin.community.dto.PostDtos;
 import com.hongchelin.community.entity.Post;
 import com.hongchelin.community.repository.PostRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import jakarta.transaction.Transactional;
-
 @Service
-@RequiredArgsConstructor
 public class PostService {
+    private final PostRepository posts;
+    private final AuthorSnapshotService author;
 
-    private final PostRepository postRepository;
-
-    public Long createPost(PostCreateRequest request) {
-        Post post = Post.builder()
-                .title(request.getTitle())
-                .createdDate(request.getDate())
-                .location(request.getLocation())
-                .recommendedMenu(request.getRecommendedMenu())
-                .content(request.getContent())
-                .imagePath(request.getImagePath())
-                .rating(request.getRating())
-                .build();
-
-        return postRepository.save(post).getId();
+    public PostService(PostRepository posts, AuthorSnapshotService author) {
+        this.posts = posts; this.author = author;
     }
 
-    public List<PostResponse> getAllPosts() {
-        return postRepository.findAll().stream()
-                .map(PostResponse::new)
-                .toList();
+    public Post create(Long userId, PostDtos.CreateReq req) {
+        var a = author.get(userId);
+        var p = Post.create(
+                a.id(), a.nickname(), a.profileImageUrl(), a.badgeIconUrl(),
+                req.title(), req.restaurantName(), req.location(), req.recommendedMenu(),
+                req.content(), req.rating(), req.imageUrl()
+        );
+        return posts.save(p);
     }
 
-    public Post getPost(Long id) {
-        return postRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+    public Post edit(Long id, Long userId, PostDtos.UpdateReq req) {
+        var p = posts.findById(id).orElseThrow(() -> new IllegalArgumentException("게시글 없음"));
+        if (!p.ownedBy(userId)) throw new SecurityException("수정 권한이 없습니다.");
+        p.edit(req.title(), req.restaurantName(), req.location(), req.recommendedMenu(),
+                req.content(), req.rating(), req.imageUrl());
+        return posts.save(p);
     }
 
-    @Transactional
-    public Long updatePost(Long id, PostUpdateRequest request) {
-        Post post = getPost(id); // 존재하는지 확인
-        post.update(request);
-        return post.getId();
+    public void delete(Long id, Long userId) {
+        var p = posts.findById(id).orElseThrow(() -> new IllegalArgumentException("게시글 없음"));
+        if (!p.ownedBy(userId)) throw new SecurityException("삭제 권한이 없습니다.");
+        posts.delete(p);
     }
 
-    public void deletePost(Long id) {
-        Post post = getPost(id);
-        postRepository.delete(post);
+    public Post get(Long id) {
+        return posts.findById(id).orElseThrow(() -> new IllegalArgumentException("게시글 없음"));
+    }
+
+    public Page<PostDtos.ListItem> search(String q, int page, int size) {
+        var pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        var pageObj = (q == null || q.isBlank())
+                ? posts.findAllByOrderByCreatedAtDesc(pageable)
+                : posts.findByTitleContainingIgnoreCaseOrRestaurantNameContainingIgnoreCaseOrContentContainingIgnoreCase(
+                q, q, q, pageable);
+        return pageObj.map(PostDtos.ListItem::of);
     }
 }

@@ -1,28 +1,38 @@
 package com.hongchelin.community.controller;
 
-import com.hongchelin.community.dto.CommentCreateRequest;
+import com.hongchelin.community.dto.CommentDtos;
 import com.hongchelin.community.service.CommentService;
-import lombok.RequiredArgsConstructor;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequiredArgsConstructor
-@RequestMapping("/posts/{postId}/comments")
+@RequestMapping("/api/community")
 public class CommentController {
 
-    private final CommentService commentService;
+    private final CommentService comments;
 
-    @PostMapping
-    public Long addComment(@PathVariable Long postId,
-                           @RequestBody CommentCreateRequest request) {
-        return commentService.addComment(postId, request);
+    public CommentController(CommentService comments) { this.comments = comments; }
+
+    // 댓글 목록(상세 화면에서 사용)
+    @GetMapping("/posts/{postId}/comments")
+    public CommentDtos.ListResp list(@PathVariable Long postId) {
+        return CommentDtos.ListResp.of(comments.list(postId));
     }
 
-    /** ✅ 댓글 삭제 API 추가 */
-    @DeleteMapping("/{commentId}")
-    public void deleteComment(@PathVariable Long postId,
-                              @PathVariable Long commentId) {
-        // postId는 경로 구조를 유지하기 위해 받지만 실제 삭제에는 commentId만 사용
-        commentService.deleteComment(commentId);
+    // 댓글 작성
+    @PostMapping("/posts/{postId}/comments")
+    public java.util.Map<String, Object> add(@RequestHeader("X-USER-ID") Long userId,
+                                             @PathVariable Long postId,
+                                             @RequestBody @Valid CommentDtos.CreateReq req) {
+        var saved = comments.add(postId, userId, req);
+        return java.util.Map.of("id", saved.getId());
+    }
+
+    // 댓글 삭제(작성자 본인만)
+    @DeleteMapping("/comments/{commentId}")
+    public void delete(@RequestHeader("X-USER-ID") Long userId,
+                       @PathVariable Long commentId) {
+        comments.delete(commentId, userId);
     }
 }
+
