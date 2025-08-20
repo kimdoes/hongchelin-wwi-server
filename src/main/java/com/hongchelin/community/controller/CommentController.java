@@ -14,13 +14,17 @@ public class CommentController {
     public CommentController(CommentService comments) { this.comments = comments; }
 
     // 댓글 목록(상세 화면에서 사용)
-    @GetMapping("/posts/{postId}/comments")
+    @GetMapping({"/api/community/posts/{postId}/comments",
+            "/community/posts/{postId}/comments"})
+//    @GetMapping("/posts/{postId}/comments")
     public CommentDtos.ListResp list(@PathVariable Long postId) {
         return CommentDtos.ListResp.of(comments.list(postId));
     }
 
     // 댓글 작성
-    @PostMapping("/posts/{postId}/comments")
+    @PostMapping({"/api/community/posts/{postId}/comments",
+            "/community/posts/{postId}/comments"})
+//    @PostMapping("/posts/{postId}/comments")
     public java.util.Map<String, Object> add(@RequestHeader("X-USER-ID") Long userId,
                                              @PathVariable Long postId,
                                              @RequestBody @Valid CommentDtos.CreateReq req) {
@@ -29,7 +33,9 @@ public class CommentController {
     }
 
     // 댓글 삭제(작성자 본인만)
-    @DeleteMapping("/comments/{commentId}")
+    @DeleteMapping({"/api/community/comments/{commentId}",
+            "/community/comments/{commentId}"})
+//    @DeleteMapping("/comments/{commentId}")
     public void delete(@RequestHeader("X-USER-ID") Long userId,
                        @PathVariable Long commentId) {
         comments.delete(commentId, userId);
