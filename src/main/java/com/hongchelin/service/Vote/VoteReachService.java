@@ -8,22 +8,29 @@ import com.hongchelin.exceptions.UnauthorizedException;
 import com.hongchelin.service.JWT.JWTFilter;
 import com.hongchelin.dto.Response.StoreForVoteResponseDTO;
 import com.hongchelin.dto.user.MemberDTO;
+import com.hongchelin.service.StoreConverterService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class VoteReachService {
     private final JWTFilter jwtFilter;
     private final MemberRepositoryInterface memberRepository;
     private final StoreForVoteRepositoryInterface storeForVoteRepository;
+    private final StoreConverterService storeConverterService;
+
     public VoteReachService(JWTFilter jwtFilter,
                             MemberRepositoryInterface memberRepository,
-                            StoreForVoteRepositoryInterface storeForVoteRepository) {
+                            StoreForVoteRepositoryInterface storeForVoteRepository,
+                            StoreConverterService storeConverterService) {
         this.jwtFilter = jwtFilter;
         this.memberRepository = memberRepository;
         this.storeForVoteRepository = storeForVoteRepository;
+        this.storeConverterService = storeConverterService;
     }
 
     public ResponseEntity<StoreForVoteResponseDTO> VoteService(String secret, HttpServletRequest request) throws UnauthorizedException {
@@ -55,23 +62,23 @@ public class VoteReachService {
 
             if (member != null) {
                 if (!member.isVoteAvailable()) { //이미 투표함. 투표 불가능
-                    Iterable<StoreForVote> voteList = getStoresForVote();
+                    List<StoreForVote> voteList = getStoresForVote();
 
                     StoreForVoteResponseDTO storeForVoteResponseDTO = StoreForVoteResponseDTO.builder()
                             .status(200)
                             .message("성공(이미 투표한 사용자)")
-                            .storeForVote(voteList)
+                            .storeForVote(storeConverterService.convert(voteList).getBody().getStores())
                             .voteAvailable(false)
                             .build();
 
                     return ResponseEntity.ok(storeForVoteResponseDTO);
                 } else {
-                    Iterable<StoreForVote> voteList = getStoresForVote();
+                    List<StoreForVote> voteList = getStoresForVote();
 
                     StoreForVoteResponseDTO storeForVoteResponseDTO = StoreForVoteResponseDTO.builder()
                             .status(200)
                             .message("성공(투표가능한 사용자")
-                            .storeForVote(voteList)
+                            .storeForVote(storeConverterService.convert(voteList).getBody().getStores())
                             .voteAvailable(true)
                             .build();
 
@@ -100,7 +107,7 @@ public class VoteReachService {
         }
     }
 
-    public Iterable<StoreForVote> getStoresForVote() {
+    public List<StoreForVote> getStoresForVote() {
         return storeForVoteRepository.findAll();
     }
 }

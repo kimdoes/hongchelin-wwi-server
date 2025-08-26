@@ -34,7 +34,7 @@ public class hongikUnivloginService {
         if (emailServer.equals("g.hongik.ac.kr")){
 
             Random random = new Random();
-            int pwd = random.nextInt(899999) + 100000;
+            String pwd = Integer.toString(random.nextInt(899999) + 100000);
 
             String sub = "홍익대학교 재학생 이메일 로그인 인증요청입니다.";
             String text = "안녕하세요.\n저희 홍익대학교 맛집 아카이빙 프로젝트 '홍슐랭'을 이용해주셔서 감사합니다.\n\n인증번호는\n"+pwd+"\n입니다.\n\n감사합니다.";

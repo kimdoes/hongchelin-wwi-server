@@ -14,7 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/store")
+
 public class StoreRegisterController {
+    @Value("${spring.jwt.secret}")
+    private String secret;
+
     private final StoreRegisterService storeRegisterService;
     public StoreRegisterController(StoreRegisterService storeRegisterService) {
         this.storeRegisterService = storeRegisterService;
@@ -23,8 +27,7 @@ public class StoreRegisterController {
     @PostMapping
     public ResponseEntity<ResponseDTO> StoreRegister(
             @RequestBody @Valid StoreRegisterRequstDTO storeRegisterRequstDTO,
-            HttpServletRequest request,
-            @Value("${spring.jwt.secret}") String secret
+            HttpServletRequest request
     ){
         return storeRegisterService.storeRegiester(storeRegisterRequstDTO, request, secret);
     }

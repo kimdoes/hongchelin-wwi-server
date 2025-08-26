@@ -26,6 +26,9 @@ public class LoginMainService {
     }
 
     public ResponseEntity<ResponseDTO> login(String secret, MemberRequestDTO memberRequestDTO) {
+        System.out.println(memberRequestDTO);
+        System.out.println("요청확인");
+
         String userId = memberRequestDTO.getUserId();
         String password = memberRequestDTO.getPassword();
 
@@ -47,6 +50,7 @@ public class LoginMainService {
                     .build();
 
             tokenRepository.save(token);
+            System.out.println(responseDTO);
 
             return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
         } else { //로그인 정보 없음
@@ -54,6 +58,8 @@ public class LoginMainService {
                     .status(400)
                     .message("아이디 또는 비밀번호가 올바르지 않습니다.")
                     .build();
+
+            System.out.println(responseDTO);
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseDTO);
         }

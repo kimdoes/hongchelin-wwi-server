@@ -59,6 +59,7 @@ public class SignUpService {
                     .voteAvailable(true)
                     .build();
 
+            System.out.println("회원정보가 입력됨" + member);
             memberRepository.save(member);
             ResponseDTO responseDTO = ResponseDTO.builder()
                     .status(200)

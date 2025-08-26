@@ -37,7 +37,7 @@ public class ModifyDBInEndDayService {
     }
 
     @Transactional
-    @Scheduled(cron = "* 30 00 1 * *")
+    @Scheduled(cron = "* 05 * * * *")
     public /*ResponseEntity<ResponseDTO>*/ void modifyInEnd() {
         List<StoreForVote> stores = storeForVoteRepository.findTop3ByOrderByVotedCountDesc();
         List<StoreForSelected> selectedList = new ArrayList<>();

@@ -2,6 +2,7 @@ package com.hongchelin.service.Vote;
 
 import com.hongchelin.Domain.*;
 import com.hongchelin.Repository.*;
+import com.hongchelin.exceptions.CannotFoundDbElementException;
 import com.hongchelin.exceptions.UnauthorizedException;
 import com.hongchelin.service.JWT.JWTFilter;
 import com.hongchelin.dto.Request.voteRequstDTO;
@@ -56,18 +57,8 @@ public class VoteService {
         if (!validity) {
             throw new UnauthorizedException();
         }
-        ResponseDTO responseDTO = jwtFilter.getTokenFromHeader(secret, request);
+        String userId = jwtFilter.getTokenFromHeader(secret, request).getMemberInfo().getIdentifier();
 
-        if (responseDTO == null) {                                   //토큰이 없을 경우
-            StoreForVoteResponseDTO storeForVoteResponseDTO = StoreForVoteResponseDTO.builder()
-                    .status(400)
-                    .message("토큰이 전달되지 않았습니다.")
-                    .build();
-
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(storeForVoteResponseDTO);
-        }
-
-        String userId = responseDTO.getMemberInfo().getIdentifier();
         boolean voteAvailable = memberRepository.findByUserId(userId).get(0).isVoteAvailable();   //사용자 투표여부 조사
 
         if (!voteAvailable) {         //이미투표한사용자
@@ -79,7 +70,7 @@ public class VoteService {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(storeForVoteResponseDTO);
         }
 
-        if (votedIds == null || votedIds.size() == 0) {     //사용자가 투표한 상점들의 id 리스트 - 메서드 인자로 제공됨
+        if (votedIds == null || votedIds.isEmpty()) {     //사용자가 투표한 상점들의 id 리스트 - 메서드 인자로 제공됨
             StoreForVoteResponseDTO storeForVoteResponseDTO = StoreForVoteResponseDTO.builder()
                     .status(400)
                     .message("반드시 하나를 선택해주세요.")
@@ -102,15 +93,16 @@ public class VoteService {
         }
 
         for (Long id : votedIds) {              //리스트를 순회하며 아이디를 따고 상점정보를 가져와 저장함
-            Optional<StoreForVote> storeForVoteInOptional = storeForVoteRepository.findById(id);
+            Store store = storeRepositoryInterface.findById(id);
 
-            if (storeForVoteInOptional.isPresent()) {       //DB에 값이 있는 경우
-                StoreForVote storeForVote = storeForVoteInOptional.get();
-                storeForVoteList.add(storeForVote);
+            if (store != null) {       //DB에 값이 있는 경우
+                StoreForVote storeForVote = storeForVoteRepository.findByStoreId(id);
 
-                Integer votedCount = storeForVote.getVotedCount() + 1;
-                storeForVote.setVotedCount(votedCount);
-                storeForVoteRepository.save(storeForVote);
+                if (storeForVote != null) {
+                    storeForVoteList.add(storeForVote);
+                } else {
+                    throw new CannotFoundDbElementException();
+                }
             } else {                                        //DB에 값이 없는 경우 - 저장 취소 및 오류 반환
                 StoreForVoteResponseDTO storeForVoteResponseDTO = StoreForVoteResponseDTO.builder()
                         .status(400)
@@ -126,6 +118,8 @@ public class VoteService {
         }
 
         for (StoreForVote storeForVote : storeForVoteList) {    // 인자로 받은 값들이 모두 정상. DB에 저장하는 과정
+            Integer votedCount = storeForVote.getVotedCount() + 1;
+            storeForVote.setVotedCount(votedCount);
             storeForVoteRepository.save(storeForVote);
         }
 
@@ -133,6 +127,7 @@ public class VoteService {
                 .status(200)
                 .message("성공")
                 .build();
+
         modifyUserVoteAvailable(userId);
 
         for (long ids : votedIds) {

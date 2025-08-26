@@ -1,5 +1,6 @@
 package com.hongchelin.controller.vote;
 
+import com.hongchelin.dto.Response.StoreResponseEntityDTO;
 import com.hongchelin.service.Vote.*;
 import com.hongchelin.dto.Request.StoreRegisterInVoteRequestDTO;
 import com.hongchelin.dto.Request.voteRequstDTO;
@@ -16,6 +17,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/votes")
 @Controller
 public class VoteController {
+    @Value("${spring.jwt.secret}")
+    private String secret;
+
     private final VoteReachService voteReachService;
     private final AccessVoteByMonthService accessVoteByMonthService;
     private final StoreRegisterInVoteService storeRegisterInVoteService;
@@ -41,15 +45,13 @@ public class VoteController {
 
     @GetMapping()
     public ResponseEntity<StoreForVoteResponseDTO> VTController(
-            HttpServletRequest request,
-            @Value("${spring.jwt.secret}") String secret) {
+            HttpServletRequest request) {
         return voteReachService.VoteService(secret, request);
     }
 
     @PostMapping()
     public ResponseEntity<StoreForVoteResponseDTO> voteServiceConnection(
             HttpServletRequest request,
-            @Value("${spring.jwt.secret}") String secret,
             @RequestBody voteRequstDTO voteRequstDTO) {
         return voteService.voteMainService(secret, voteRequstDTO, request);
     }
@@ -57,15 +59,13 @@ public class VoteController {
     @PostMapping("/stores")
     public ResponseEntity<ResponseDTO> registerStore(
             @RequestBody @Valid StoreRegisterInVoteRequestDTO storeRegisterInVoteRequestDTO,
-            HttpServletRequest request,
-            @Value("${spring.jwt.secret}") String secret) {
+            HttpServletRequest request) {
         return storeRegisterInVoteService.storeRegisterInVote(storeRegisterInVoteRequestDTO, request, secret);
     }
 
 
     @GetMapping("/candidates")
     public ResponseEntity<PastStoreForVoteResponseDTO> AccessVoteByMonth(
-            @Value("${spring.jwt.secret}") String secret,
             HttpServletRequest request) {
         return accessMyVoteService.accessMyVoteService(request, secret);
     }
@@ -76,9 +76,8 @@ public class VoteController {
     }
 
     @GetMapping("/result")
-    public ResponseEntity<StoreForVoteResponseDTO> voteResultAccess(
-            HttpServletRequest request,
-            @Value("${spring.jwt.secret}") String secret
+    public ResponseEntity<StoreResponseEntityDTO> voteResultAccess(
+            HttpServletRequest request
     ) {
         return voteResultService.voteResult();
     }

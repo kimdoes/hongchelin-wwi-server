@@ -13,31 +13,39 @@
 
 package com.hongchelin.service.login.OAuth;
 
+import com.hongchelin.Repository.MemberRepositoryInterface;
 import com.hongchelin.dto.user.ResponseDTO;
-import com.hongchelin.dto.whatForSignupDTO;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
+import com.hongchelin.service.JWT.JWTFilter;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
-import java.util.Map;
 
 @Service
 public class loginService {
-    public void setLoginFor() {
-        whatForSignupDTO.setForLogin(true);
+    protected final MemberRepositoryInterface memberRepository;
+    protected final JWTFilter jwtFilter;
+
+        public loginService(JWTFilter jwtFilter,
+                                MemberRepositoryInterface memberRepository) {
+        this.jwtFilter = jwtFilter;
+        this.memberRepository = memberRepository;
     }
 
-    public ResponseEntity<?> loginMethodSorting(int oauthprovider) {
+    public ResponseEntity<?> loginMethodSorting(int oauthprovider,
+                                                HttpServletResponse response,
+                                                String mode) {
+        setCookie(mode, response);
         switch (oauthprovider) {
             case 1:
-                return googlelogin();
+                return googlelogin(response);
             case 2:
-                return naverlogin();
+                return naverlogin(response);
             case 3:
-                return kakaologin();
+                return kakaologin(response);
             default:
                 ResponseDTO responseDTO = ResponseDTO.builder()
                         .status(400)
@@ -50,24 +58,41 @@ public class loginService {
         }
     }
 
-    public ResponseEntity<Map<String, Object>> googlelogin() {
+    public ResponseEntity<?> googlelogin(HttpServletResponse response) {
+            String url = "/oauth2/authorization/google";
+
         return ResponseEntity
                 .status(HttpStatus.FOUND)
-                .location(URI.create("/oauth2/authorization/google"))
+                .location(URI.create(url))
                 .build();
     }
 
-    public ResponseEntity<Map<String, Object>> naverlogin() {
+    public ResponseEntity<?> naverlogin(HttpServletResponse response) {
+
+            String url = "/oauth2/authorization/naver";
         return ResponseEntity
                 .status(HttpStatus.FOUND)
-                .location(URI.create("/oauth2/authorization/naver"))
+                .location(URI.create(url))
                 .build();
     }
 
-    public ResponseEntity<Map<String, Object>> kakaologin() {
-        return ResponseEntity
-                .status(HttpStatus.FOUND)
-                .location(URI.create("/oauth2/authorization/kakao"))
-                .build();
+    public ResponseEntity<?> kakaologin(HttpServletResponse response) {
+            String url = "/oauth2/authorization/kakao";
+
+            return ResponseEntity
+                    .status(HttpStatus.FOUND)
+                    .location(URI.create(url))
+                    .build();
+    }
+
+    public void setCookie(String mode, HttpServletResponse response) {
+        Cookie cookie = new Cookie("mode", mode);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setMaxAge(3600);
+        response.addCookie(cookie);
+
+        System.out.println("로그인");
     }
 }

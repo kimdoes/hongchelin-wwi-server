@@ -8,10 +8,10 @@
 package com.hongchelin.controller.login.OAuth;
 
 import com.hongchelin.dto.user.ResponseDTO;
-import com.hongchelin.dto.whatForSignupDTO;
 import com.hongchelin.service.login.OAuth.loginService;
 import com.hongchelin.service.login.OAuth.loginSuccessService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/login")
+@RequestMapping("/login")
 public class loginController {
     private final loginService loginService;
     private final loginSuccessService loginSuccessService;
@@ -35,8 +35,10 @@ public class loginController {
     }
 
     @GetMapping("/{authprovider}")
-    public ResponseEntity<?> login(@PathVariable int authprovider) {
-        return loginService.loginMethodSorting(authprovider);
+    public ResponseEntity<?> login(@PathVariable int authprovider,
+                                   HttpServletResponse response) {
+        String mode = "login";
+        return loginService.loginMethodSorting(authprovider, response, mode);
     }
 
     @GetMapping("/success")

@@ -1,6 +1,8 @@
 package com.hongchelin.controller;
 
 import com.hongchelin.dto.user.ResponseDTO;
+import com.hongchelin.exceptions.CannotFoundDbElementException;
+import com.hongchelin.exceptions.CookieNotFoundExcpetion;
 import com.hongchelin.exceptions.UnauthorizedException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -127,5 +129,29 @@ public class GlobalExceptionHandler {
                 .build();
 
         return new ResponseEntity<>(responseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(CookieNotFoundExcpetion.class)
+    public ResponseEntity<ResponseDTO> cookieNotFoundException(
+            CookieNotFoundExcpetion ex
+    ) {
+        ResponseDTO responseDTO = ResponseDTO.builder()
+                .status(400)
+                .message("데이터가 존재하지 않습니다.")
+                .build();
+
+        return new ResponseEntity<>(responseDTO, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CannotFoundDbElementException.class)
+    public ResponseEntity<ResponseDTO> cannotFoundDbElementException(
+            CookieNotFoundExcpetion ex
+    ) {
+        ResponseDTO responseDTO = ResponseDTO.builder()
+                .status(400)
+                .message("데이터베이스 내 입력된 데이터가 존재하지 않습니다.")
+                .build();
+
+        return new ResponseEntity<>(responseDTO, HttpStatus.BAD_REQUEST);
     }
 }

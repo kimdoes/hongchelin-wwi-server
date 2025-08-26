@@ -15,13 +15,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class tokenExpiredController {
+    @Value("${spring.jwt.secret}")
+    private String secret;
+
     private final JWTExpiredService jwtExpiredService;
     public tokenExpiredController(JWTExpiredService jwtExpiredService) {
         this.jwtExpiredService = jwtExpiredService;
     }
 
     @GetMapping("/api/login/expired")
-    public ResponseEntity<?> loginExpired(@Value("${spring.jwt.secret}") String secret, HttpServletRequest request) {
+    public ResponseEntity<?> loginExpired(HttpServletRequest request) {
         System.out.println(secret);
         return jwtExpiredService.getJWTRefresh(request, secret);
     }

@@ -17,7 +17,7 @@ public class EmailCheckerService {
     }
 
     @Async
-    public ResponseEntity<ResponseDTO> EmailCheckerService(Integer userPwd) {
+    public ResponseEntity<ResponseDTO> EmailCheckerService(String userPwd) {
         boolean pwd = passwordRepository.checkingNumber(userPwd);
 
         if (pwd) {

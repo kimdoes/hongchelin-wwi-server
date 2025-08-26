@@ -69,6 +69,7 @@ public class JWTFilter {
                     .status(200)
                     .validity(true)
                     .MemberInfo(member)
+                    .accessToken(token)
                     .build();
         } else {
             return ResponseDTO.builder()

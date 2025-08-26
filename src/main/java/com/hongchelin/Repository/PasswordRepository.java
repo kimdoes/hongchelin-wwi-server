@@ -10,7 +10,7 @@ public class PasswordRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Integer save (Integer pwd) {
+    public String save (String pwd) {
         jdbcTemplate.update(
                 "insert into PWD (number) values (?)",
                 pwd
@@ -19,7 +19,7 @@ public class PasswordRepository {
         return pwd;
     }
 
-    public Integer delete (Integer pwd) {
+    public String delete (String pwd) {
         jdbcTemplate.update(
                 "DELETE FROM PWD WHERE (number) = (?)",
                 pwd
@@ -28,7 +28,7 @@ public class PasswordRepository {
         return pwd;
     }
 
-    public boolean checkingNumber(Integer pwd) {
+    public boolean checkingNumber(String pwd) {
         String sql = """
         SELECT COUNT(*) FROM PWD WHERE number = ?
         """;

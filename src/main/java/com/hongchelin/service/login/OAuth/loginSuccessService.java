@@ -39,9 +39,7 @@ import java.util.*;
 
 @Service
 public class loginSuccessService extends LoginMainService {
-    private final TokenRepositoryInterface tokenRepositoryInterface;
-    private JWTFilter jwtFilter;
-    private MemberRepositoryInterface memberRepository;
+    private final MemberRepositoryInterface memberRepository;
 
     @Autowired
     public loginSuccessService(JWTFilter jwtFilter,
@@ -49,7 +47,7 @@ public class loginSuccessService extends LoginMainService {
                                TokenRepositoryInterface tokenRepositoryInterface) {
 
         super(memberRepository, jwtFilter, tokenRepositoryInterface);
-        this.tokenRepositoryInterface = tokenRepositoryInterface;
+        this.memberRepository = memberRepository;
     }
 
     public ResponseEntity<ResponseDTO> checkUserInformation(String secret,
@@ -85,7 +83,7 @@ public class loginSuccessService extends LoginMainService {
 
             return login(secret, memberRequestDTO);
         } else {
-            throw new UnauthorizedException();
+            throw new IllegalStateException();
         }
     }
 }

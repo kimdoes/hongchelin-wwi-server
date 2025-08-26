@@ -5,9 +5,9 @@ import com.hongchelin.Domain.VoteRecord;
 import com.hongchelin.Repository.PastStoreRepositoryInterface;
 import com.hongchelin.Repository.VoteRecordRepository;
 import com.hongchelin.dto.Response.PastStoreForVoteResponseDTO;
-import com.hongchelin.dto.user.ResponseDTO;
 import com.hongchelin.exceptions.UnauthorizedException;
 import com.hongchelin.service.JWT.JWTFilter;
+import com.hongchelin.service.StoreConverterService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -20,12 +20,16 @@ public class AccessMyVoteService {
     private JWTFilter jwtFilter;
     private VoteRecordRepository voteRecordRepository;
     private PastStoreRepositoryInterface pastStoreRepository;
+    private final StoreConverterService storeConverterService;
+
     public AccessMyVoteService(JWTFilter jwtFilter,
                                VoteRecordRepository voteRecordRepository,
-                               PastStoreRepositoryInterface pastStoreRepository) {
+                               PastStoreRepositoryInterface pastStoreRepository,
+                               StoreConverterService storeConverterService) {
         this.jwtFilter = jwtFilter;
         this.voteRecordRepository = voteRecordRepository;
         this.pastStoreRepository = pastStoreRepository;
+        this.storeConverterService = storeConverterService;
     }
 
     public ResponseEntity<PastStoreForVoteResponseDTO> accessMyVoteService(HttpServletRequest request, String secret) throws UnauthorizedException {
@@ -55,7 +59,7 @@ public class AccessMyVoteService {
         PastStoreForVoteResponseDTO pastStoreForVoteResponseDTO = PastStoreForVoteResponseDTO.builder()
                 .status(200)
                 .message("성공")
-                .storeForPastVote(pastStoreForVoteList)
+                .storeForPastVote(storeConverterService.convertPast(pastStoreForVoteList).getBody().getStores())
                 .build();
 
         return ResponseEntity.ok(pastStoreForVoteResponseDTO);

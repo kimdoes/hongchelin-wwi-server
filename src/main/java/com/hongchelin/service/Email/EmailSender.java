@@ -26,7 +26,7 @@ import java.util.Properties;
 
 @Service
 public class EmailSender {
-    public ResponseEntity<ResponseDTO> EmailSenderService(String to, int pwd, String subject, String text) throws MessagingException {
+    public ResponseEntity<ResponseDTO> EmailSenderService(String to, String pwd, String subject, String text) throws MessagingException {
        try {
            String from = "hongchelin422@gmail.com";
            String password = "prthyoacfatxvgto";

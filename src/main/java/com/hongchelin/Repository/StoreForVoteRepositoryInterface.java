@@ -8,8 +8,11 @@ import java.util.Optional;
 
 public interface StoreForVoteRepositoryInterface extends CrudRepository<StoreForVote, Long> {
     Integer countByStoreId(long storeId);
+    List<StoreForVote> findAll();
 
     Optional<StoreForVote> findById(Long id);
     List<StoreForVote> findTop3ByOrderByVotedCountDesc();
     void deleteByStoreId(long storeId);
+
+    StoreForVote findByStoreId(long storeId);
 }
