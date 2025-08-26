@@ -87,19 +87,12 @@ import java.util.List;
 
 // src/main/java/com/hongchelin/community/entity/Post.java
 
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor
 @Entity
 @Table(name = "community_post")
-public class Post {
+public class Post_c {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -153,11 +146,11 @@ public class Post {
         this.updatedDate = LocalDateTime.now();
     }
 
-    public static Post create(Long authorId, String authorNickname, String authorProfileImageUrl,
-                              String authorBadgeIconUrl,
-                              String title, String restaurantName, String location,
-                              String recommendedMenu, String content, Integer rating, String imageUrl) {
-        Post p = new Post();
+    public static Post_c create(Long authorId, String authorNickname, String authorProfileImageUrl,
+                                String authorBadgeIconUrl,
+                                String title, String restaurantName, String location,
+                                String recommendedMenu, String content, Integer rating, String imageUrl) {
+        Post_c p = new Post_c();
         p.authorId = authorId;
         p.authorNickname = authorNickname;
         p.authorProfileImageUrl = authorProfileImageUrl;

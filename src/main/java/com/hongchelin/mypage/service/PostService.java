@@ -1,12 +1,21 @@
 // service/PostService.java
 package com.hongchelin.mypage.service;
 
+<<<<<<< HEAD
 import com.hongchelin.mypage.entity.*;
 import com.hongchelin.mypage.repository.PostRepository;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+=======
+import com.hongchelin.mypage.entity.Post;
+import com.hongchelin.mypage.repository.PostRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+>>>>>>> feature/community
 
 import java.util.List;
 

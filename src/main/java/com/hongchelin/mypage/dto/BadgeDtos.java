@@ -1,6 +1,13 @@
 // dto/BadgeDtos.java
 package com.hongchelin.mypage.dto;
+<<<<<<< HEAD
 import com.hongchelin.mypage.entity.*;
+=======
+
+import com.hongchelin.mypage.entity.Badge;
+import com.hongchelin.mypage.entity.UserBadge;
+
+>>>>>>> feature/community
 import java.time.LocalDateTime;
 
 public class BadgeDtos {

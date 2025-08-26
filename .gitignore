@@ -35,5 +35,14 @@ out/
 
 ### VS Code ###
 .vscode/
+<<<<<<< HEAD
 *.yml
 *.properties
+=======
+<<<<<<< HEAD
+=======
+
+*.yml
+*.properties
+>>>>>>> main
+>>>>>>> feature/community

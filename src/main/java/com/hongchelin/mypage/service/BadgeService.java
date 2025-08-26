@@ -1,6 +1,7 @@
 // service/BadgeService.java
 package com.hongchelin.mypage.service;
 
+<<<<<<< HEAD
 import com.hongchelin.mypage.entity.*;
 import com.hongchelin.mypage.dto.BadgeDtos.BadgeResp;
 import com.hongchelin.mypage.repository.*;
@@ -8,6 +9,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
 import com.hongchelin.mypage.exception.ApiException;
 
+=======
+import com.hongchelin.mypage.entity.Badge;
+import com.hongchelin.mypage.entity.UserBadge;
+import com.hongchelin.mypage.exception.ApiException;
+import com.hongchelin.mypage.repository.BadgeRepository;
+import com.hongchelin.mypage.repository.UserBadgeRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+>>>>>>> feature/community
 
 import java.util.List;
 

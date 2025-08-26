@@ -11,7 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Configuration
-public class WebMvcConfig implements WebMvcConfigurer {
+public class WebMvcConfig_c implements WebMvcConfigurer {
 
     // 업로드 폴더 경로(없으면 기본값 ./uploads 사용) — 빈 생성 시 프로퍼티 없어서 터지는 걸 방지
     @Value("${app.upload-dir:./uploads}")

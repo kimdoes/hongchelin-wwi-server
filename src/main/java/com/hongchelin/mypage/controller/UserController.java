@@ -1,7 +1,13 @@
 // controller/UserController.java
 package com.hongchelin.mypage.controller;
 
+<<<<<<< HEAD
 import com.hongchelin.mypage.dto.UserDtos.*;
+=======
+import com.hongchelin.mypage.dto.UserDtos.AuthorProfile;
+import com.hongchelin.mypage.dto.UserDtos.MeResp;
+import com.hongchelin.mypage.dto.UserDtos.NicknameReq;
+>>>>>>> feature/community
 import com.hongchelin.mypage.service.FileStorageService;
 import com.hongchelin.mypage.service.UserService;
 import jakarta.validation.Valid;

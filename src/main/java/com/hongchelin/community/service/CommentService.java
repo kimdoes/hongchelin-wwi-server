@@ -3,16 +3,16 @@ package com.hongchelin.community.service;
 import com.hongchelin.community.dto.CommentDtos;
 import com.hongchelin.community.entity.Comment;
 import com.hongchelin.community.repository.CommentRepository;
-import com.hongchelin.community.repository.PostRepository;
+import com.hongchelin.community.repository.PostRepository_c;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CommentService {
     private final CommentRepository comments;
-    private final PostRepository posts;
+    private final PostRepository_c posts;
     private final AuthorSnapshotService author;
 
-    public CommentService(CommentRepository comments, PostRepository posts, AuthorSnapshotService author) {
+    public CommentService(CommentRepository comments, PostRepository_c posts, AuthorSnapshotService author) {
         this.comments = comments; this.posts = posts; this.author = author;
     }
 

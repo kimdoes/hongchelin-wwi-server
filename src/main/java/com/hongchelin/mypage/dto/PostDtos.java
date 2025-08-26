@@ -1,7 +1,14 @@
 // dto/PostDtos.java
 package com.hongchelin.mypage.dto;
+<<<<<<< HEAD
 import com.hongchelin.mypage.entity.Post;
 import org.springframework.data.domain.Page;
+=======
+
+import com.hongchelin.mypage.entity.Post;
+import org.springframework.data.domain.Page;
+
+>>>>>>> feature/community
 import java.util.List;
 
 public class PostDtos {
@@ -15,8 +22,13 @@ public class PostDtos {
         }
     }
 
+<<<<<<< HEAD
     public record LatestTwoResp(boolean empty, java.util.List<MyPostItem> items) {
         public static LatestTwoResp of(java.util.List<Post> list) {
+=======
+    public record LatestTwoResp(boolean empty, List<MyPostItem> items) {
+        public static LatestTwoResp of(List<Post> list) {
+>>>>>>> feature/community
             return new LatestTwoResp(list.isEmpty(),
                     list.stream().map(MyPostItem::of).toList());
         }
