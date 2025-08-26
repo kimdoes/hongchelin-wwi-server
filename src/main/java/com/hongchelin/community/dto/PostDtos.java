@@ -213,6 +213,7 @@
 // src/main/java/com/hongchelin/community/dto/PostDtos.java
 package com.hongchelin.community.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hongchelin.community.entity.Post;
 import jakarta.validation.constraints.*;
 
@@ -249,7 +250,8 @@ public class PostDtos {
             String restaurantName,
             String preview,
             String thumbnailUrl,
-            String createdAtKst,        // 표시용
+            @JsonProperty("createdDate") String createdAtKst,
+            // String createdAtKst,        // 표시용
             String authorNickname,
             String authorProfileImageUrl,
             String authorBadgeIconUrl
@@ -279,7 +281,8 @@ public class PostDtos {
             String content,
             Integer rating,
             String imageUrl,
-            String createdAtKst,        // 표시용
+            @JsonProperty("createdDate") String createdAtKst,
+            // String createdAtKst,        // 표시용
             Long authorId,
             String authorNickname,
             String authorProfileImageUrl,

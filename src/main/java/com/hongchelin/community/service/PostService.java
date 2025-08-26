@@ -52,7 +52,7 @@ public class PostService {
     }
 
     public Page<PostDtos.ListItem> search(String q, int page, int size) {
-        var pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdDate")); // ✅
+        var pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdDate")); //
         var pageObj = (q == null || q.isBlank())
                 ? posts.findAllByOrderByCreatedDateDesc(pageable) //
                 : posts.findByTitleContainingIgnoreCaseOrRestaurantNameContainingIgnoreCaseOrContentContainingIgnoreCase(
