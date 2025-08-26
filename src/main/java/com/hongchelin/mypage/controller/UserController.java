@@ -43,6 +43,16 @@ public class UserController {
     public AuthorProfile authorProfile(@RequestHeader(value="X-USER-ID", required=false) Long userId){
         return users.authorProfile(uid(userId));
     }
+
+    @PutMapping("/badges/active/{badgeId}")
+    public MeResp setActiveBadge(
+            @RequestHeader(value="X-USER-ID", required=false) Long userId,
+            @PathVariable Long badgeId) {
+        Long id = uid(userId);              // null이면 1L 사용
+        users.setActiveBadge(id, badgeId);  // 보유 안 한 배지는 403 던짐
+        return MeResp.of(users.getOrCreate(id));
+    }
+
 }
 
 

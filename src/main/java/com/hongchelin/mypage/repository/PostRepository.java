@@ -3,7 +3,13 @@ package com.hongchelin.mypage.repository;
 import com.hongchelin.mypage.entity.*;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
 public interface PostRepository extends JpaRepository<Post, Long> {
-    Page<Post> findByAuthor(User author, Pageable pageable);
+    // 정렬 보장 페이징 + 최신 2개 조회용 메서드 추가
+    Page<Post> findByAuthor(User author, org.springframework.data.domain.Pageable pageable);
+    List<Post> findTop2ByAuthorOrderByCreatedAtDesc(User author);
+
 }
 

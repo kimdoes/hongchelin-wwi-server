@@ -9,9 +9,16 @@ public class PostDtos {
         public static MyPostItem of(Post p){ return new MyPostItem(p.getId(), p.getTitle(), p.getImagePath()); }
     }
     public record MyPostPage(int page, int size, long total, boolean empty, List<MyPostItem> items){
-        public static MyPostPage of(Page<Post> pg){
-            return new MyPostPage(pg.getNumber(), pg.getSize(), pg.getTotalElements(), pg.getTotalElements()==0,
+        public static MyPostPage of(Page<Post> pg) {
+            return new MyPostPage(pg.getNumber(), pg.getSize(), pg.getTotalElements(), pg.getTotalElements() == 0,
                     pg.getContent().stream().map(MyPostItem::of).toList());
+        }
+    }
+
+    public record LatestTwoResp(boolean empty, java.util.List<MyPostItem> items) {
+        public static LatestTwoResp of(java.util.List<Post> list) {
+            return new LatestTwoResp(list.isEmpty(),
+                    list.stream().map(MyPostItem::of).toList());
         }
     }
 }
