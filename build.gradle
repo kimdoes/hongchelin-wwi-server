@@ -1,5 +1,6 @@
 plugins {
 	id 'java'
+
 	id 'org.springframework.boot' version '3.5.3'
 	id 'io.spring.dependency-management' version '1.1.7'
 }
@@ -9,7 +10,13 @@ version = '0.0.1-SNAPSHOT'
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
+    languageVersion = JavaLanguageVersion.of(17)
+  }
+
+  
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor		
 	}
 }
 
@@ -18,6 +25,7 @@ repositories {
 }
 
 dependencies {
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
 	compileOnly 'org.projectlombok:lombok:1.18.28'
 	annotationProcessor 'org.projectlombok:lombok:1.18.28'
@@ -43,7 +51,7 @@ dependencies {
 
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-	runtimeOnly 'com.h2database:h2'
+
 }
 
 tasks.named('test') {
