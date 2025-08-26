@@ -214,13 +214,13 @@
 package com.hongchelin.community.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.hongchelin.community.entity.Post;
+import com.hongchelin.community.entity.Post_c;
 import jakarta.validation.constraints.*;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
-public class PostDtos {
+public class PostDtos_c {
 
     // 생성/수정 요청
     public record CreateReq(
@@ -256,7 +256,7 @@ public class PostDtos {
             String authorProfileImageUrl,
             String authorBadgeIconUrl
     ) {
-        public static ListItem of(Post p) {
+        public static ListItem of(Post_c p) {
             var fmt = DateTimeFormatter.ofPattern("yyyy. M. d. a h:mm")
                     .withZone(ZoneId.of("Asia/Seoul"));
             String preview = p.getContent().length() > 60
@@ -288,7 +288,7 @@ public class PostDtos {
             String authorProfileImageUrl,
             String authorBadgeIconUrl
     ) {
-        public static Detail of(Post p) {
+        public static Detail of(Post_c p) {
             var fmt = DateTimeFormatter.ofPattern("yyyy. M. d. a h:mm")
                     .withZone(ZoneId.of("Asia/Seoul"));
             return new Detail(

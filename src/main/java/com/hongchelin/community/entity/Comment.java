@@ -16,7 +16,7 @@ public class Comment {
     private Long id;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private Post post;
+    private Post_c post;
 
     // 작성자 스냅샷(댓글)
     private Long authorId;
@@ -28,7 +28,7 @@ public class Comment {
 
     private LocalDateTime createdAt;
 
-    public static Comment create(Post post, Long authorId, String nickname,
+    public static Comment create(Post_c post, Long authorId, String nickname,
                                  String profileImageUrl, String content) {
         Comment c = new Comment();
         c.post = post;

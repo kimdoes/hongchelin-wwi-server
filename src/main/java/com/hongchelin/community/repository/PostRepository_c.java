@@ -1,16 +1,16 @@
 // src/main/java/com/hongchelin/community/repository/PostRepository.java
 package com.hongchelin.community.repository;
 
-import com.hongchelin.community.entity.Post;
+import com.hongchelin.community.entity.Post_c;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface PostRepository extends JpaRepository<Post, Long> {
+public interface PostRepository_c extends JpaRepository<Post_c, Long> {
 
-    Page<Post> findAllByOrderByCreatedDateDesc(Pageable pageable); //
+    Page<Post_c> findAllByOrderByCreatedDateDesc(Pageable pageable); //
 
-    Page<Post> findByTitleContainingIgnoreCaseOrRestaurantNameContainingIgnoreCaseOrContentContainingIgnoreCase(
+    Page<Post_c> findByTitleContainingIgnoreCaseOrRestaurantNameContainingIgnoreCaseOrContentContainingIgnoreCase(
             String title, String restaurantName, String content, Pageable pageable
     );
 }

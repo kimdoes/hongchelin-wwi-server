@@ -60,9 +60,9 @@
 // src/main/java/com/hongchelin/community/controller/PostController.java
 package com.hongchelin.community.controller;
 
-import com.hongchelin.community.dto.PostDtos;
-import com.hongchelin.community.entity.Post;
-import com.hongchelin.community.service.PostService;
+import com.hongchelin.community.dto.PostDtos_c;
+import com.hongchelin.community.entity.Post_c;
+import com.hongchelin.community.service.PostService_c;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -71,50 +71,50 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/community/posts")
 public class PostController {
 
-    private final PostService posts;
+    private final PostService_c posts;
 
-    public PostController(PostService posts) {
+    public PostController(PostService_c posts) {
         this.posts = posts;
     }
 
     // 목록 (검색어 없으면 최신순)
     @GetMapping
-    public PostDtos.PageResp<PostDtos.ListItem> list(
+    public PostDtos_c.PageResp<PostDtos_c.ListItem> list(
             @RequestParam(required = false) String query,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        return PostDtos.PageResp.of(posts.search(query, page, size));
+        return PostDtos_c.PageResp.of(posts.search(query, page, size));
     }
 
     // 상세
     @GetMapping("/{postId}")
-    public PostDtos.Detail detail(@PathVariable Long postId) {
-        Post p = posts.get(postId);
-        return PostDtos.Detail.of(p);
+    public PostDtos_c.Detail detail(@PathVariable Long postId) {
+        Post_c p = posts.get(postId);
+        return PostDtos_c.Detail.of(p);
     }
 
     // 생성 (JSON만)
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public PostDtos.Detail createJson(
+    public PostDtos_c.Detail createJson(
             @RequestHeader(value="X-USER-ID", required=false) Long userId,
-            @Valid @RequestBody PostDtos.CreateReq req
+            @Valid @RequestBody PostDtos_c.CreateReq req
     ) {
         Long uid = (userId == null ? 1L : userId); // 기본값
-        Post saved = posts.create(uid, req);
-        return PostDtos.Detail.of(saved);
+        Post_c saved = posts.create(uid, req);
+        return PostDtos_c.Detail.of(saved);
     }
 
     // 수정
     @PutMapping(value="/{postId}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public PostDtos.Detail editJson(
+    public PostDtos_c.Detail editJson(
             @RequestHeader(value="X-USER-ID", required=false) Long userId,
             @PathVariable Long postId,
-            @Valid @RequestBody PostDtos.UpdateReq req
+            @Valid @RequestBody PostDtos_c.UpdateReq req
     ) {
         Long uid = (userId == null ? 1L : userId);
-        Post edited = posts.edit(postId, uid, req);
-        return PostDtos.Detail.of(edited);
+        Post_c edited = posts.edit(postId, uid, req);
+        return PostDtos_c.Detail.of(edited);
     }
 
     // 삭제
