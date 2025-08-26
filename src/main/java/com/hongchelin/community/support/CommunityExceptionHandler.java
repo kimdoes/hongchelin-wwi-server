@@ -1,11 +1,13 @@
 package com.hongchelin.community.support;
 
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
-@RestControllerAdvice
-public class GlobalExceptionHandler {
+@Order(1) // (선택) 공통 핸들러보다 먼저
+@RestControllerAdvice(basePackages = "com.hongchelin.community")
+public class CommunityExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
